@@ -1,0 +1,26 @@
+view "north_america" {
+  match-clients { US; CA; MX; AR; CL; BR; PY; PE; EC; CO; VE; BO; UY; };
+  recursion no;
+  zone "wso2group2dev.ml" {
+    type master;
+    file "/etc/bind/us-fwd.conf";
+  };
+};
+
+view "asia" {
+  match-clients { LK; SG; };
+  recursion no;
+  zone "wso2group2dev.ml" {
+    type master;
+    file "/etc/bind/asia-fwd.conf";
+  };
+};
+
+view "other" {
+  match-clients { any; };
+  recursion no;
+  zone "wso2group2dev.ml" {
+    type master;
+    file "/etc/bind/asia-fwd.conf";
+  };
+};

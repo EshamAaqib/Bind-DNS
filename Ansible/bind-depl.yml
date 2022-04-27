@@ -1,0 +1,63 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: test connection
+      ping:
+          data: host is reachable with ansible
+
+    - name: Update and upgrade apt packages
+      apt:
+        upgrade: yes
+        update_cache: yes
+        cache_valid_time: 86400 #One day
+    
+    - name: install bind 
+      apt:
+        name:
+          - bind9
+          - bind9utils
+          - bind9-doc
+          - dnsutils
+          - net-tools
+        state: present
+
+    - name: Copying Asia Forward Zone to host
+      copy:
+        src: Files/asia-fwd.conf
+        dest: /etc/bind/asia-fwd.conf
+
+    - name: Copying USA Forward Zone to host
+      copy:
+        src: Files/us-fwd.conf
+        dest: /etc/bind/us-fwd.conf
+
+    - name: Copying Default Forward Zone to host
+      copy:
+        src: Files/default-fwd.conf
+        dest: /etc/bind/default-fwd.conf
+
+    - name: Copying GeoIP List to host
+      copy:
+        src: Files/GeoIP.acl
+        dest: /etc/bind/GeoIP.acl
+
+    - name: Copying Named Conf Views to host
+      copy:
+        src: Files/named.conf.views
+        dest: /etc/bind/named.conf.views
+  
+    - name: Copying named.conf to host
+      copy:
+        src: Files/named.conf
+        dest: /etc/bind/named.conf
+
+    - name: restart Bind
+      become: yes
+      systemd:
+        name: bind9
+        state: restarted
+
+  
+
+          
